@@ -12,7 +12,7 @@
 // ==/UserScript==
 
 (function() {
-    let evaluationWords = ["非常认同","难度适当","基本都在听课","非常有兴趣","提升很多"];
+    let evaluationWords = ["非常认同","难度适当","基本都在听课","非常有兴趣","提升很多"]
     function sleep(numberMillis) {
         var now = new Date()
         var exitTime = now.getTime() + numberMillis
@@ -22,17 +22,22 @@
         }
     }
     function fill(){
-        $(document).ready(function(){
-            let options = $(".option-container")
-            for(let item of options){
-                if($.inArray(item.innerText,evaluationWords) !== -1){
-                    $(item).siblings("td").children("div").children("span").click()
+        let promise = new Promise((resolve,reject)=>{
+            $(document).ready(function(){
+                let options = $(".option-container")
+                for(let item of options){
+                    if($.inArray(item.innerText,evaluationWords) !== -1){
+                        $(item).siblings("td").children("div").children("span").click()
+                    }
                 }
-            }
-            sleep(5000)
-            $(".paper-submit").click()
-            sleep(500)
-            $(".btn-back")[0].click()
+                sleep(5000)
+                $(".paper-submit").click()
+                sleep(500)
+                $(".btn-back")[0].click()
+                setTimeout(resolve,1000)
+            })
+        })
+        promise.then(() => {
             window.onload = survey()
         })
     }
